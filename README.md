@@ -8,7 +8,7 @@ Starts with two jobs, **Delivery** (box van to shop back doors) and **Recycling*
 
 ## Features
 
-- **Job Center**: an NPC with a map icon. Press **E** to open the Job Portal. It also opens with `/jobs`, and from a **Jobs** tile on ph-tablet if that is installed. No item needed.
+- **Job Center**: an NPC with a map icon. Press **E** at the NPC to open the Job Portal. It's the only way to open it, so every player goes to the Job Center to get a job. No item needed.
 - **Teams of up to 4**: create a team, join an open one, leave, or (as leader) kick. The leader starts and cancels jobs.
 - **Team bonus for everyone**: 1 player 100 %, 2 players 115 %, 3 players 130 %, 4 players 150 % (`Config.TeamBonus`).
 - **Work vehicle**: spawned in the Job Center parking lot when the job starts. It comes fully fuelled and the keys go to the team leader. It costs a deposit ($250), which is refunded when the vehicle is parked back at the Job Center.
@@ -24,7 +24,7 @@ Starts with two jobs, **Delivery** (box van to shop back doors) and **Recycling*
 ## Requirements
 
 - `qb-core`
-- Optional: `qb-vehiclekeys` (keys for the leader), `qb-fuel` / `LegacyFuel` / `ps-fuel` / `cdn-fuel` (full tank), `ph-tablet` (Jobs tile)
+- Optional: `qb-vehiclekeys` (keys for the leader), `qb-fuel` / `LegacyFuel` / `ps-fuel` / `cdn-fuel` (full tank)
 
 ## Installation
 
@@ -45,8 +45,8 @@ Starts with two jobs, **Delivery** (box van to shop back doors) and **Recycling*
 
 ## Playing
 
-1. Go to the Job Center (marked "Job Center" on the map) and press **E**, or type `/jobs`.
-2. **Create team**. Friends open their own portal and press **Join** on your team.
+1. Go to the Job Center (marked "Job Center" on the map) and press **E** at the NPC.
+2. **Create team**. Friends come to the Job Center, open the portal and press **Join** on your team.
 3. The leader picks a job and presses **Start job**. The deposit is taken from the leader's cash (or bank).
 4. Get in the vehicle in the parking lot and follow the GPS route.
 5. At each stop:

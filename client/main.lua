@@ -3,7 +3,6 @@
 Client = { state = nil, center = nil, portalOpen = false }
 
 local REQUEST_TIMEOUT_MS = 10000
-local TABLET_CLOSE_DELAY_MS = 400 -- ph-tablet releases the mouse before our portal takes it
 local pending, nextId = {}, 0
 
 --- Sends an action to the server and waits for { ok, message, data }.
@@ -56,12 +55,6 @@ RegisterNUICallback('request', function(body, cb)
     cb(Client.request(body.action, body.data))
 end)
 
--- From the Jobs tile on ph-tablet.
-RegisterNUICallback('openPortal', function(_, cb)
-    cb({})
-    SetTimeout(TABLET_CLOSE_DELAY_MS, Client.openPortal)
-end)
-
 RegisterNetEvent('vanguard-jobs:state', function(state)
     Client.state = state
     if Client.portalOpen then SendNUIMessage({ action = 'state', state = state }) end
@@ -77,8 +70,6 @@ RegisterNetEvent('vanguard-jobs:teamsChanged', function()
         SendNUIMessage({ action = 'state', state = result.data })
     end
 end)
-
-RegisterCommand(Config.Command, Client.openPortal, false)
 
 CreateThread(function()
     while not NetworkIsSessionStarted() do Wait(500) end

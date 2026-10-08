@@ -17,7 +17,7 @@ return the van and each get one bank payment that is higher than a solo run.
 | Topic | Decision |
 |---|---|
 | Location | One Job Center (NPC + map icon + parking lot). Admins can move NPC and parking in-game. |
-| Portal | Own tablet-style NUI, opened by E at the NPC, `/jobs`, or a **Jobs** tile on ph-tablet. No item needed. |
+| Portal | Own tablet-style NUI, opened only by E at the Job Center NPC (changed 2026-10-09: no `/jobs`, no ph-tablet tile). No item needed. |
 | Teams | Create / join open team / leave / kick, max 4. Leader starts jobs. Leader leaving hands over to the next member. |
 | Vehicle | Spawns at the Job Center parking on start; **keys to the team leader**; full tank; job plate. |
 | Delivery | Box van; 4–6 store back-door stops; at each stop members take boxes from the back of the van and carry them to the door. |
@@ -60,8 +60,7 @@ vanguard-jobs/
   client/main.lua        requests, portal open/close, state updates
   client/center.lua      NPC, blip, [E] prompt, admin move commands
   client/run.lua         stop blips/waypoints, [E] take/drop, carry anims, tracker
-  client/tablet.lua      ph-tablet "Jobs" tile (only if ph-tablet is running)
-  html/                  portal (index.html, style.css, app.js) + tracker + tablet tile module
+  html/                  portal (index.html, style.css, app.js) + tracker
   tests/                 fengari specs for shared/*
 ```
 

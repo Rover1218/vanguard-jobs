@@ -4,7 +4,7 @@ lua54 'yes'
 
 name 'vanguard-jobs'
 author 'Rover'
-description 'Vanguard Jobs - team jobs (delivery, recycling) with a Job Center and a tablet Job Portal'
+description 'Vanguard Jobs - team jobs (delivery, recycling) from a Job Center NPC'
 version '0.1.0'
 
 ui_page 'html/index.html'
@@ -20,7 +20,6 @@ client_scripts {
     'client/main.lua',
     'client/center.lua',
     'client/run.lua',
-    'client/tablet.lua',
 }
 
 server_scripts {
@@ -36,8 +35,6 @@ files {
     'html/index.html',
     'html/style.css',
     'html/app.js',
-    'html/tablet/jobs.js',
-    'html/tablet/jobs.svg',
 }
 
 dependencies {

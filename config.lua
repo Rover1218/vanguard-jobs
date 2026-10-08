@@ -2,7 +2,6 @@ Config = {}
 
 Config.Brand = { Title = 'VANGUARD', Subtitle = 'JOBS', Accent = '#10b981' }
 
-Config.Command = 'jobs'                   -- /jobs opens the portal anywhere (team management)
 Config.AdminAce = 'vanguard.jobs.admin'      -- server.cfg: add_ace group.admin vanguard.jobs.admin allow
 Config.AdminCommand = 'jobcenter'         -- /jobcenter ped | /jobcenter parking (stand where it should go)
 
@@ -15,8 +14,8 @@ Config.Center = {
     ped = vector4(-270.2, -956.4, 31.22, 205.0),
     parking = vector4(-286.0, -985.0, 31.08, 250.0),
     blip = { sprite = 408, colour = 17, scale = 0.85 },
-    interactDistance = 2.0,  -- E at the NPC
-    startDistance = 6.0,     -- the leader must stand this close to the NPC to start a job
+    interactDistance = 2.0,  -- E at the NPC opens the Job Portal (the only way to open it)
+    startDistance = 6.0,     -- stand this close to the NPC to create / join a team or start a job
     returnDistance = 35.0,   -- the vehicle must be this close to the parking spot to finish
 }
 

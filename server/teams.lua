@@ -89,7 +89,17 @@ Router.on('state', function(src)
     return Router.ok(nil, Teams.stateFor(src))
 end)
 
+--- Teams are formed at the Job Center only.
+local function atCenter(src)
+    return Center.distance(src, Center.ped()) <= Config.Center.startDistance
+end
+
+local function notAtCenter()
+    return Router.fail(('Go to the %s to get a job'):format(Config.Center.label))
+end
+
 Router.on('createTeam', function(src)
+    if not atCenter(src) then return notAtCenter() end
     local team, err = store:create(src)
     if not team then return Router.fail(err) end
     Teams.push(team)
@@ -98,6 +108,7 @@ Router.on('createTeam', function(src)
 end)
 
 Router.on('joinTeam', function(src, data)
+    if not atCenter(src) then return notAtCenter() end
     local id = Rules.wholeNumber(data.teamId, 1, 2 ^ 31)
     local team, err = store:join(src, id)
     if not team then return Router.fail(err) end
