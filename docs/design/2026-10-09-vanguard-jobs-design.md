@@ -1,10 +1,10 @@
-# Rover Jobs — design
+# Vanguard Jobs — design
 
-Date: 2026-10-09 · Status: approved in chat · Later: published as **Vanguard Jobs** (multi-framework)
+Date: 2026-10-09 · Status: approved in chat · Resource / folder: `vanguard-jobs` (QBCore first, multi-framework later)
 
 ## Purpose
 
-Team jobs for the Rover Development QBCore server. One **Job Center** NPC; pressing **E** opens a
+Team jobs for FiveM, built first for the Rover Development QBCore server. One **Job Center** NPC; pressing **E** opens a
 tablet-style **Job Portal** where players form a team (1–4) and start a job together. First jobs:
 **Delivery** and **Recycling**; more job types are added later as config + small client code.
 
@@ -47,7 +47,7 @@ tracker show `Delivery · Stop 3/5 · Boxes 1/3`.
 ## Architecture
 
 ```
-rover-jobs/
+vanguard-jobs/
   fxmanifest.lua  config.lua
   shared/rules.lua       pure: team bonus, payout, random stop pick, input checks
   shared/teamstore.lua   pure: team membership (create/join/leave/kick/leader handover)
