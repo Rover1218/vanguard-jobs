@@ -45,7 +45,7 @@ Starts with two jobs, **Delivery** (box van to shop back doors) and **Recycling*
 
 ## Playing
 
-1. Go to the Job Center (briefcase icon on the map) and press **E**, or type `/jobs`.
+1. Go to the Job Center (marked "Job Center" on the map) and press **E**, or type `/jobs`.
 2. **Create team**. Friends open their own portal and press **Join** on your team.
 3. The leader picks a job and presses **Start job**. The deposit is taken from the leader's cash (or bank).
 4. Get in the vehicle in the parking lot and follow the GPS route.
