@@ -149,22 +149,35 @@ local function prepare(src, def)
     return vehicle, account
 end
 
-Router.on('startJob', function(src, data)
+--- The caller's team, or a new team of one when they start alone (solo = true).
+local function teamForStart(src)
     local team = Teams.store:teamOf(src)
-    if not team then return Router.fail('Create a team first (a team of one is fine)') end
-    if team.leader ~= src then return Router.fail('Only the team leader can start a job') end
-    if team.run or team.starting then return Router.fail('Your team is already working') end
+    if team then return team, false end
+    local created, err = Teams.store:create(src)
+    if not created then return nil, err end
+    Teams.store:setBusy(created.id, true) -- keep it off the open-teams list while the vehicle spawns
+    return created, true
+end
+
+Router.on('startJob', function(src, data)
     local jobId = type(data.job) == 'string' and data.job or ''
     local def = Config.Jobs[jobId]
     if not def then return Router.fail('Pick a job') end
     if Center.distance(src, Center.ped()) > Config.Center.startDistance then
         return Router.fail(('Start the job at the %s'):format(Config.Center.label))
     end
+    local team, solo = teamForStart(src)
+    if not team then return Router.fail(solo) end
+    if team.leader ~= src then return Router.fail('Only the team leader can start a job') end
+    if team.run or team.starting then return Router.fail('Your team is already working') end
 
     team.starting = true
     local vehicle, account = prepare(src, def)
     team.starting = nil
-    if not vehicle then return Router.fail(account) end
+    if not vehicle then
+        if solo then Teams.remove(src, 'left') end -- undo the team of one
+        return Router.fail(account)
+    end
     -- the team may have changed while the vehicle spawned
     if Teams.store:teamOf(src) ~= team or team.leader ~= src then
         DeleteEntity(vehicle)

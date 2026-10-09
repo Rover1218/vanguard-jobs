@@ -57,18 +57,18 @@ function icon(name) {
 
 const money = (value) => `$${Math.floor(Number(value) || 0).toLocaleString('en-US')}`;
 
-/** Same maths as shared/rules.lua Rules.payout, for estimates. */
-function payout(job, stopsDone, totalStops, size, bonus) {
-    if (stopsDone <= 0) return 0;
-    let base = job.payPerStop * stopsDone;
-    if (totalStops > 0 && stopsDone >= totalStops) base += job.routeBonus;
-    const pct = (bonus && bonus[size]) || (Array.isArray(bonus) && bonus[size - 1]) || 100;
-    return Math.floor((base * pct) / 100);
-}
-
+/** Team bonus % for a team size. Lua's { [1] = 100, ... } arrives as a 0-based array. */
 function bonusFor(data, size) {
     const bonus = data.bonus || {};
     return (Array.isArray(bonus) ? bonus[size - 1] : bonus[size]) || 100;
+}
+
+/** Same maths as shared/rules.lua Rules.payout, for estimates. */
+function payout(job, stopsDone, totalStops, size, data) {
+    if (stopsDone <= 0) return 0;
+    let base = job.payPerStop * stopsDone;
+    if (totalStops > 0 && stopsDone >= totalStops) base += job.routeBonus;
+    return Math.floor((base * bonusFor(data, size)) / 100);
 }
 
 async function post(endpoint, data = {}) {
@@ -182,14 +182,15 @@ function stat(label, value) {
 
 function renderJobs(data) {
     const size = data.team ? data.team.members.length : 1;
-    const canStart = data.team && data.isLeader;
+    // no team = start alone (the server makes a team of one); in a team only the leader starts
+    const canStart = !data.team || data.isLeader;
     return el('div', { class: 'view' },
         el('div', { class: 'kicker', text: data.center || 'Job Center' }),
         el('div', { class: 'title', text: 'Choose a job' }),
-        el('p', { class: 'subtitle', text: `The leader starts the job at the Job Center. The work vehicle appears in the parking lot and the leader gets the keys. Vehicle deposit ${money(data.deposit)}, refunded when you bring it back.` }),
+        el('p', { class: 'subtitle', text: `Start alone, or create a team first so friends can join. The work vehicle appears in the parking lot and the leader gets the keys. Vehicle deposit ${money(data.deposit)}, refunded when you bring it back.` }),
         el('div', { class: 'jobs' }, data.jobs.map((job, index) => {
-            const each = payout(job, job.stops, job.stops, size, data.bonus);
-            const label = !data.team ? 'Create a team to start' : (canStart ? 'Start job' : 'Waiting for the leader');
+            const each = payout(job, job.stops, job.stops, size, data);
+            const label = !data.team ? 'Start alone' : (canStart ? 'Start job' : 'Waiting for the leader');
             return el('article', { class: 'job', style: `--i:${index}` },
                 el('div', { class: 'job-head' },
                     el('span', { class: 'job-icon' }, icon(job.icon)),
