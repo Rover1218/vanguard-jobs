@@ -145,7 +145,7 @@ function renderTeam(data) {
                         class: 'btn is-small', type: 'button',
                         onclick: (event) => act(event.currentTarget, 'joinTeam', { teamId: team.id }),
                     }, 'Join'))))
-                : el('div', { class: 'empty', text: 'No open teams right now. Create one and your friends can join it from their Job Portal.' }));
+                : el('div', { class: 'empty', text: 'No open teams right now. Create one, then friends press E at the Job Center and tap Join on it.' }));
     }
 
     const members = data.team.members;
@@ -155,7 +155,7 @@ function renderTeam(data) {
     for (let i = size; i < data.maxSize; i++) {
         slots.push(el('div', { class: 'slot is-empty', style: `--i:${i}` },
             el('span', { class: 'avatar' }),
-            el('span', { class: 'slot-text' }, el('strong', { text: 'Open slot' }), el('small', { text: 'Friends join from their Job Portal' }))));
+            el('span', { class: 'slot-text' }, el('strong', { text: 'Open slot' }), el('small', { text: 'Friends: E at the Job Center, then Join' }))));
     }
 
     return el('div', { class: 'view', style: 'display:flex;flex-direction:column;gap:16px;height:100%' },
