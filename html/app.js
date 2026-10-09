@@ -228,10 +228,16 @@ function stepText(run) {
     return { title: `Stop ${run.stopIndex}: ${what} left to collect`, text: `Follow the GPS route. Grab a ${run.unit} from the bin [E] and throw it into the back of the ${vehicle} [E].` };
 }
 
+/** One segment per stop: done stops full, the current stop fills box by box. */
 function timeline(run) {
-    return el('div', { class: 'timeline' }, run.stops.map((stop, index) => el('span', {
-        class: `tl${stop.done ? ' is-done' : ''}${!stop.done && index + 1 === run.stopIndex && run.phase === 'stop' ? ' is-current' : ''}`,
-    }, el('span'))));
+    const share = run.unitsTotal > 0 ? Math.round((run.unitsDone / run.unitsTotal) * 100) : 0;
+    return el('div', { class: 'timeline' }, run.stops.map((stop, index) => {
+        const current = !stop.done && index + 1 === run.stopIndex && run.phase === 'stop';
+        return el('span', {
+            class: `tl${stop.done ? ' is-done' : ''}${current ? ' is-current' : ''}`,
+            style: current ? `--fill:${share}%` : null,
+        }, el('span'));
+    }));
 }
 
 function progressRing(done, total) {

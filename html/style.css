@@ -500,8 +500,9 @@ svg { fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; 
 }
 .tl span { display: block; height: 100%; width: 0; background: var(--accent); transition: width 600ms var(--ease); }
 .tl.is-done span { width: 100%; }
-.tl.is-current span { width: 45%; animation: shimmer 1.6s ease-in-out infinite; }
-@keyframes shimmer { 50% { opacity: 0.5; } }
+/* the stop you're on: lit track, fills with each box / bag delivered */
+.tl.is-current { background: var(--accent-soft); box-shadow: inset 0 0 0 1px var(--accent-line); }
+.tl.is-current span { width: var(--fill, 0%); }
 
 .money-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 18px; }
 

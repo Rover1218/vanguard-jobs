@@ -24,6 +24,7 @@ Config.TeamBonus = { [1] = 100, [2] = 115, [3] = 130, [4] = 150 } -- % of the pa
 Config.Deposit = 250            -- paid by the leader when starting, refunded when the vehicle comes back
 Config.StopReach = 4.0          -- metres from a stop to take / drop a box or bag
 Config.VehicleReach = 7.0       -- metres from the work vehicle to take / drop a box or bag
+Config.VehicleStopReach = 30.0  -- the work vehicle must be parked this close to the stop to load / unload
 Config.PromptKey = 38           -- E
 Config.DropCarryKey = 73        -- X: put down what you are carrying (it goes back where it came from)
 

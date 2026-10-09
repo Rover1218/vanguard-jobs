@@ -155,6 +155,8 @@ CreateThread(function()
             local stopPos = view.stop and vector3(view.stop.x, view.stop.y, view.stop.z) or nil
             local vehicle = workVehicle(view)
             local rear = vehicle and rearOf(vehicle) or nil
+            -- the vehicle only counts once it is parked at the stop (the server checks the same)
+            if rear and stopPos and #(GetEntityCoords(vehicle) - stopPos) > Config.VehicleStopReach then rear = nil end
             local places = { stop = stopPos, vehicle = rear }
 
             if stopPos and #(pos - stopPos) < 45.0 then
@@ -204,16 +206,14 @@ CreateThread(function()
     end
 end)
 
--- Keys for the work vehicle (team leader).
+-- The leader's new work vehicle: full tank, wheels on the ground. (Keys come from the server.)
 RegisterNetEvent('vanguard-jobs:vehicle', function(netId)
     local giveUp = GetGameTimer() + 10000
     while not NetworkDoesEntityExistWithNetworkId(netId) and GetGameTimer() < giveUp do Wait(100) end
     if not NetworkDoesEntityExistWithNetworkId(netId) then return end
     local vehicle = NetToVeh(netId)
     SetVehicleOnGroundProperly(vehicle)
-    ClientBridge.giveKeys(vehicle)
     ClientBridge.fillFuel(vehicle)
-    ClientBridge.notify('You have the keys to the work vehicle', 'success')
 end)
 
 RegisterNetEvent('vanguard-jobs:dropped', stopCarry)

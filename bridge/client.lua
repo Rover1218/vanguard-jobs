@@ -1,4 +1,5 @@
--- Vanguard Jobs - client bridge (QBCore today): keys, fuel, notifications, 3D text.
+-- Vanguard Jobs - client bridge (QBCore today): fuel, notifications, 3D text.
+-- Vehicle keys are given on the server (bridge/server.lua).
 
 ClientBridge = {}
 
@@ -6,11 +7,6 @@ local QBCore = exports['qb-core']:GetCoreObject()
 
 function ClientBridge.notify(message, kind)
     if message then QBCore.Functions.Notify(message, kind or 'primary', 5000) end
-end
-
---- Keys for the work vehicle (qb-vehiclekeys), so the G engine key works.
-function ClientBridge.giveKeys(vehicle)
-    TriggerEvent('vehiclekeys:client:SetOwner', QBCore.Functions.GetPlate(vehicle))
 end
 
 function ClientBridge.fillFuel(vehicle)

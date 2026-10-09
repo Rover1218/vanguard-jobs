@@ -41,6 +41,18 @@ function Bridge.addMoney(src, account, amount, reason)
     return p.Functions.AddMoney(account, amount, reason) ~= false
 end
 
+--- Vehicle keys (qb-vehiclekeys). Given on the server: its client route only works within 7.5 m.
+function Bridge.giveKeys(src, plate)
+    if GetResourceState('qb-vehiclekeys') ~= 'started' then return end
+    local ok, err = pcall(function() exports['qb-vehiclekeys']:GiveKeys(src, plate) end)
+    if not ok then print(('[vanguard-jobs] could not give keys for %s: %s'):format(plate, err)) end
+end
+
+function Bridge.removeKeys(src, plate)
+    if GetResourceState('qb-vehiclekeys') ~= 'started' then return end
+    pcall(function() exports['qb-vehiclekeys']:RemoveKeys(src, plate) end)
+end
+
 function Bridge.notify(src, message, kind)
     TriggerClientEvent('QBCore:Notify', src, message, kind or 'primary', 5000)
 end

@@ -10,6 +10,8 @@ local function random(n) return math.random(n) end
 
 local function job(run) return Config.Jobs[run.jobId] end
 
+local function vehicleWord(def) return def.vehicle == 'trash2' and 'truck' or 'van' end
+
 local function vehicleCoords(run)
     if not run.vehicle or not DoesEntityExist(run.vehicle) then return nil end
     return GetEntityCoords(run.vehicle)
@@ -63,7 +65,14 @@ local function ended(team, members)
     end
 end
 
+local function giveKeys(run, src)
+    run.keyHolders[src] = true
+    Bridge.giveKeys(src, run.plate)
+end
+
+--- Removes the work vehicle and takes its keys back.
 local function deleteVehicle(run)
+    for holder in pairs(run.keyHolders or {}) do Bridge.removeKeys(holder, run.plate) end
     if run.vehicle and DoesEntityExist(run.vehicle) then DeleteEntity(run.vehicle) end
 end
 
@@ -119,12 +128,17 @@ function Runs.memberLeft(team, src)
 end
 
 function Runs.leaderChanged(team, leader)
-    if team.run and team.run.net then TriggerClientEvent('vanguard-jobs:vehicle', leader, team.run.net, job(team.run).plate) end
+    if team.run then giveKeys(team.run, leader) end
 end
 
 -- ---------------------------------------------------------------------------
 -- Start
 -- ---------------------------------------------------------------------------
+
+--- A plate of its own for every work vehicle (keys are per plate): DELI4821, RECY0397...
+local function newPlate(def)
+    return ('%s%04d'):format(def.plate:sub(1, 4):upper(), math.random(0, 9999))
+end
 
 local function spawnVehicle(def)
     local parking = Center.parking()
@@ -132,21 +146,22 @@ local function spawnVehicle(def)
     local waitUntil = GetGameTimer() + VEHICLE_WAIT_MS
     while not DoesEntityExist(vehicle) and GetGameTimer() < waitUntil do Wait(0) end
     if not DoesEntityExist(vehicle) then return nil end
-    SetVehicleNumberPlateText(vehicle, def.plate:sub(1, 8))
-    return vehicle
+    local plate = newPlate(def)
+    SetVehicleNumberPlateText(vehicle, plate)
+    return vehicle, plate
 end
 
 --- Takes the deposit and spawns the vehicle. Yields while the vehicle appears, so the caller
---- re-checks the team afterwards. Returns vehicle, account or nil, message.
+--- re-checks the team afterwards. Returns vehicle, account, plate or nil, message.
 local function prepare(src, def)
     local account = Bridge.takeMoney(src, Config.Deposit, 'vanguard-jobs deposit')
     if not account then return nil, ('You need $%d for the vehicle deposit'):format(Config.Deposit) end
-    local vehicle = spawnVehicle(def)
+    local vehicle, plate = spawnVehicle(def)
     if not vehicle then
         Bridge.addMoney(src, account, Config.Deposit, 'vanguard-jobs deposit refund')
         return nil, 'The work vehicle could not be spawned - try again'
     end
-    return vehicle, account
+    return vehicle, account, plate
 end
 
 --- The caller's team, or a new team of one when they start alone (solo = true).
@@ -172,7 +187,7 @@ Router.on('startJob', function(src, data)
     if team.run or team.starting then return Router.fail('Your team is already working') end
 
     team.starting = true
-    local vehicle, account = prepare(src, def)
+    local vehicle, account, plate = prepare(src, def)
     team.starting = nil
     if not vehicle then
         if solo then Teams.remove(src, 'left') end -- undo the team of one
@@ -191,13 +206,14 @@ Router.on('startJob', function(src, data)
     end
     team.run = {
         jobId = jobId, stops = stops, index = 1, phase = 'stop',
-        vehicle = vehicle, net = NetworkGetNetworkIdFromEntity(vehicle),
+        vehicle = vehicle, net = NetworkGetNetworkIdFromEntity(vehicle), plate = plate, keyHolders = {},
         depositPayer = src, depositAccount = account,
     }
     Teams.store:setBusy(team.id, true)
-    TriggerClientEvent('vanguard-jobs:vehicle', src, team.run.net, def.plate)
+    giveKeys(team.run, src)
+    TriggerClientEvent('vanguard-jobs:vehicle', src, team.run.net)
     for _, member in ipairs(team.members) do
-        Bridge.notify(member, ('%s started - your %s is in the Job Center parking'):format(def.label, def.vehicle == 'trash2' and 'truck' or 'van'), 'success')
+        Bridge.notify(member, ('%s started - your %s (%s) is in the Job Center parking'):format(def.label, vehicleWord(def), plate), 'success')
     end
     TriggerClientEvent('vanguard-jobs:teamsChanged', -1)
     Teams.push(team)
@@ -222,7 +238,11 @@ local function near(src, run, def, place)
     if place == 'vehicle' then
         local coords = vehicleCoords(run)
         if not coords then return false, 'The work vehicle is gone - the leader can cancel the job' end
-        return distanceTo(src, coords) <= Config.VehicleReach, ('Go to the back of the %s'):format(def.vehicle == 'trash2' and 'truck' or 'van')
+        -- boxes / bags only move between the vehicle and the stop it is parked at
+        if #(coords - run.stops[run.index].coords) > Config.VehicleStopReach then
+            return false, ('Park the %s at the stop first'):format(vehicleWord(def))
+        end
+        return distanceTo(src, coords) <= Config.VehicleReach, ('Go to the back of the %s'):format(vehicleWord(def))
     end
     return distanceTo(src, run.stops[run.index].coords) <= Config.StopReach, 'Go to the marked stop'
 end
