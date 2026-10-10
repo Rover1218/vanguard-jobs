@@ -5,7 +5,7 @@ lua54 'yes'
 name 'vanguard-jobs'
 author 'Rover'
 description 'Vanguard Jobs - team jobs (delivery, recycling) from a Job Center NPC'
-version '0.1.0'
+version '0.1.1'
 
 ui_page 'html/index.html'
 

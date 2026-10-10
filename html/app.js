@@ -2,7 +2,7 @@
 
 /* ==========================================================================
    Vanguard Jobs - Job Portal + on-screen tracker
-   Opened in a normal browser it runs a preview with sample data: #home, #team, #run, #tracker.
+   Opened in a normal browser it runs a preview with sample data: #home, #team, #run, #tracker, #tracker-left.
    ========================================================================== */
 
 const IS_GAME = typeof GetParentResourceName === 'function';
@@ -330,9 +330,10 @@ function render() {
     setChildren(document.getElementById('main'), main);
 }
 
-function renderTracker(run) {
+function renderTracker(run, corner) {
     const tracker = document.getElementById('tracker');
     if (!run) { tracker.hidden = true; return; }
+    tracker.dataset.corner = corner === 'top-left' ? 'top-left' : 'top-right';
     const step = stepText(run);
     setChildren(tracker,
         el('div', { class: 'tracker-head' },
@@ -399,7 +400,7 @@ window.addEventListener('message', ({ data }) => {
             ui.data = data.state;
             if (!document.getElementById('portal').hidden) render();
             break;
-        case 'tracker': renderTracker(data.tracker); break;
+        case 'tracker': renderTracker(data.tracker, data.corner); break;
         default: break;
     }
 });
@@ -439,7 +440,10 @@ const Preview = {
     start() {
         document.body.classList.add('is-preview');
         const page = (location.hash || '#home').slice(1);
-        if (page === 'tracker') { renderTracker(PREVIEW_RUN); return; }
+        if (page === 'tracker' || page === 'tracker-left') {
+            renderTracker(PREVIEW_RUN, page === 'tracker-left' ? 'top-left' : 'top-right');
+            return;
+        }
         openPortal(Preview[page] || Preview.home, { Title: 'VANGUARD', Subtitle: 'JOBS', Accent: '#10b981' });
     },
 };

@@ -552,6 +552,10 @@ svg { fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; 
 }
 @keyframes tracker-in { from { opacity: 0; transform: translateX(2vh); } }
 
+/* Config.TrackerCorner = 'top-left': mirrored, slides in from the left edge. */
+.tracker[data-corner="top-left"] { right: auto; left: 2.2vh; animation-name: tracker-in-left; }
+@keyframes tracker-in-left { from { opacity: 0; transform: translateX(-2vh); } }
+
 .tracker-head { display: flex; align-items: center; gap: 1vh; }
 .tracker-icon {
     width: 3.4vh; height: 3.4vh;

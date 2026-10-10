@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.1.1 — 2026-10-10
+
+- `Config.TrackerCorner` (`'top-left'` or `'top-right'`) picks the screen corner of the on-screen job tracker, so it can stay clear of a top-right minimap HUD. Default here: top-left.
+
 ## 0.1.0 — 2026-10-09
 
 - First version: Job Center NPC; the Job Portal opens only with E at the NPC (teams are created and joined there).

@@ -27,6 +27,7 @@ Config.VehicleReach = 7.0       -- metres from the work vehicle to take / drop a
 Config.VehicleStopReach = 30.0  -- the work vehicle must be parked this close to the stop to load / unload
 Config.PromptKey = 38           -- E
 Config.DropCarryKey = 73        -- X: put down what you are carrying (it goes back where it came from)
+Config.TrackerCorner = 'top-left' -- on-screen job tracker: 'top-left' or 'top-right' (keep it clear of your minimap / HUD)
 
 -- Job types. pickup / drop: where a unit (box, bag) is taken from and brought to: 'vehicle' or 'stop'.
 -- carry: animation + prop while carrying one unit.

@@ -103,7 +103,7 @@ function Run.update(view)
         end
         Run.blipKey = key
     end
-    SendNUIMessage({ action = 'tracker', tracker = view })
+    SendNUIMessage({ action = 'tracker', tracker = view, corner = Config.TrackerCorner })
 end
 
 function Run.take()
