@@ -4,6 +4,11 @@ Team jobs for FiveM QBCore servers. One **Job Center** NPC, one tablet-style **J
 
 Starts with two jobs, **Delivery** (box van to shop back doors) and **Recycling** (collection truck to bins). Adding more is a config entry.
 
+<p align="center">
+  <a href="docs/launch-video.mp4"><img src="docs/launch-preview.gif" alt="Vanguard Jobs launch video (20 s)" width="100%"></a>
+</p>
+<p align="center"><a href="docs/launch-video.mp4"><b>▶ Watch the launch video with sound</b></a> · 20 s · MP4</p>
+
 ![Job Portal](docs/portal.png)
 
 ## Features
